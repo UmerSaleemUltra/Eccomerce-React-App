@@ -6,19 +6,6 @@ body {
   background-color: #f7f7f7;
 }
 
-.login-container {
-  width: 90%; /* Ensures it takes up 90% of the available width */
-  max-width: 400px; /* Maximum width for larger screens */
-  margin: 5% auto; /* Center the container vertically and horizontally */
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-}
 
 .login-container h2 {
   text-align: center;
