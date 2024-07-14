@@ -9,7 +9,7 @@ const Dashboard = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products')
+        fetch('https://fakestoreapi.com/products/')
             .then(res => res.json())
             .then(json => setProducts(json))
             .catch(error => console.error('Error fetching products:', error));
@@ -113,3 +113,5 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+
+
