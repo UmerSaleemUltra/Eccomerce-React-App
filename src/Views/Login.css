@@ -27,20 +27,6 @@ body {
   color: #007bff;
 }
 
-.login-container form {
-  width: 100%;
-}
-
-.form-group {
-  margin-bottom: 1rem;
-}
-
-.form-group input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}
 
 .submit-button {
   width: 100%;
