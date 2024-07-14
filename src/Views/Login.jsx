@@ -1,5 +1,3 @@
-// src/Views/Login.jsx
-
 import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../Confing/Firebase';
@@ -10,7 +8,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import './Login.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,63 +38,65 @@ const Login = () => {
   };
 
   return (
-    <div className="login-container">
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div className="form-group">
-          <TextField
-            label="Email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={{
-              style: { color: '#007bff' },
-            }}
-          />
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+      <div className="card" style={{ padding: '20px', maxWidth: '400px', width: '100%', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
+        <h2 className="text-center mb-4">Login</h2>
+        <form onSubmit={handleLogin}>
+          <div className="form-group mb-3">
+            <TextField
+              label="Email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={{
+                style: { color: '#007bff' },
+              }}
+            />
+          </div>
+          <div className="form-group mb-3">
+            <TextField
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              fullWidth
+              margin="normal"
+              variant="outlined"
+              InputLabelProps={{
+                style: { color: '#007bff' },
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </div>
+          <Button type="submit" variant="contained" className="btn btn-primary w-100" style={{ marginTop: '10px' }}>
+            Login
+          </Button>
+        </form>
+        {error && <p className="alert alert-danger mt-3" style={{ marginTop: '10px' }}>{error}</p>}
+        {success && <p className="alert alert-success mt-3" style={{ marginTop: '10px' }}>{success}</p>}
+        <div className="mt-3 text-center">
+          <p>Don't have an account?</p>
+          <Button variant="text" component={Link} to="/signup" className="btn btn-link">
+            Signup
+          </Button>
         </div>
-        <div className="form-group">
-          <TextField
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            fullWidth
-            margin="normal"
-            variant="outlined"
-            InputLabelProps={{
-              style: { color: '#007bff' },
-            }}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
-                    onMouseDown={handleMouseDownPassword}
-                  >
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-        </div>
-        <Button type="submit" variant="contained" className="submit-button">
-          Login
-        </Button>
-      </form>
-      {error && <p className="message error">{error}</p>}
-      {success && <p className="message success">{success}</p>}
-      <div className="switch-auth">
-        <p>Don't have an account?</p>
-        <Button variant="text" component={Link} to="/signup">
-          Signup
-        </Button>
       </div>
     </div>
   );
