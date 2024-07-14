@@ -101,6 +101,7 @@ body {
 @media (max-width: 575.98px) {
   .signup-container {
     padding: 1rem;
+    background-color: white;
   }
 
   .form-group input {

@@ -94,6 +94,7 @@ body {
 @media (min-width: 1200px) {
   .login-container {
     max-width: 800px;
+    background-color: white;
   }
 }
 
