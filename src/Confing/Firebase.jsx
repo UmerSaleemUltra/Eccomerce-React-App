@@ -3,7 +3,7 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCstb362SmC2QZlX6qKLPTBI1k9cYYFKd8",
-  authDomain: "authentication-expertizo.firebaseapp.com",
+  authDomain: "https://eccomerce-react-app.vercel.app/signup",
   projectId: "authentication-expertizo",
   storageBucket: "authentication-expertizo.appspot.com",
   messagingSenderId: "630157219037",
