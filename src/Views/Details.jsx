@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import './Details.css';
+import Button from '@mui/material/Button';
+import Container from '@mui/material/Container';
+import CircularProgress from '@mui/material/CircularProgress';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Detail = () => {
     const navigate = useNavigate();
@@ -31,16 +34,67 @@ const Detail = () => {
         navigate(-1);
     };
 
-    if (loading) return <div className="loading">Loading...</div>;
+    // Inline styles
+    const styles = {
+        container: {
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            padding: '2rem',
+            maxWidth: '800px',
+            margin: '2rem auto',
+        },
+        button: {
+            marginBottom: '2rem',
+        },
+        title: {
+            marginBottom: '1rem',
+            fontFamily: 'Roboto, sans-serif',
+            color: '#333',
+            textAlign: 'center',
+        },
+        image: {
+            width: '100%',
+            borderRadius: '8px',
+            marginBottom: '1rem',
+        },
+        description: {
+            marginBottom: '1rem',
+            fontFamily: 'Roboto, sans-serif',
+            color: '#555',
+            textAlign: 'justify',
+        },
+        price: {
+            fontFamily: 'Roboto, sans-serif',
+            color: '#007bff',
+            fontSize: '1.25rem',
+            fontWeight: 'bold',
+        },
+        loadingContainer: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '100vh',
+        },
+    };
+
+    if (loading) {
+        return (
+            <Container style={styles.loadingContainer}>
+                <CircularProgress />
+            </Container>
+        );
+    }
 
     return (
-        <div className="detail-container">
-            <button className="detail-button" onClick={onBack}>Back</button>
-            <h1 className="detail-title">{product.title}</h1>
-            <img className="detail-image" src={product.image} alt={product.title} />
-            <p className="detail-description">{product.description}</p>
-            <p className="detail-price">Price: ${product.price}</p>
-        </div>
+        <Container style={styles.container}>
+            <Button variant="contained" color="primary" onClick={onBack} style={styles.button}>
+                Back
+            </Button>
+            <h1 style={styles.title}>{product.title}</h1>
+            <img src={product.image} alt={product.title} style={styles.image} />
+            <p style={styles.description}>{product.description}</p>
+            <p style={styles.price}>Price: ${product.price}</p>
+        </Container>
     );
 };
 
