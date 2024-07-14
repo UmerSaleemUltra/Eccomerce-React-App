@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import Button from '@mui/material/Button';
 import './Dashboard.css';
+import { Margin } from '@mui/icons-material';
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -20,6 +22,16 @@ const Dashboard = () => {
     return (
         <div className="container">
             <h1 className="title">Dashboard</h1>
+            <div className="button-group">
+                <Button  variant="contained" color="primary" component={Link} to="/login">
+                    Login
+                </Button>
+                <Button variant="contained" color="secondary" component={Link} to="/signup">
+                    Signup
+                </Button>
+            </div>
+            <br />
+
             <div className="product-grid">
                 {products.map(item => (
                     <div

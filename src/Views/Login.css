@@ -1,0 +1,80 @@
+/* src/Views/Login.css */
+
+.login-container {
+    width: 90%; /* Ensures it takes up 90% of the available width */
+    max-width: 400px; /* Maximum width for larger screens */
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .login-container h2 {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-family: 'Roboto', sans-serif;
+    color: #007bff;
+  }
+  
+  .login-container form {
+    width: 100%;
+  }
+  
+  .form-group {
+    margin-bottom: 1rem;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .submit-button:hover {
+    background-color: #0056b3;
+  }
+  
+  .message {
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  .message.error {
+    color: #f44336;
+  }
+  
+  .message.success {
+    color: #4caf50;
+  }
+  
+  /* Responsive adjustments */
+  @media (min-width: 576px) {
+    .login-container {
+      max-width: 500px;
+    }
+  }
+  
+  @media (min-width: 768px) {
+    .login-container {
+      max-width: 600px;
+    }
+  }
+  
+  @media (min-width: 992px) {
+    .login-container {
+      max-width: 700px;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .login-container {
+      max-width: 800px;
+    }
+  }
+  
