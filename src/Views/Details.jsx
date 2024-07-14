@@ -53,7 +53,7 @@ const Detail = () => {
             textAlign: 'center',
         },
         image: {
-            width: '100%',
+            width: '100px',
             borderRadius: '8px',
             marginBottom: '1rem',
         },

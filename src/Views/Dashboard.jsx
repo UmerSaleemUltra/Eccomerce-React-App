@@ -27,6 +27,7 @@ const Dashboard = () => {
             padding: '2rem',
             maxWidth: '1200px',
             margin: '0 auto',
+            width: '100%'
         },
         title: {
             textAlign: 'center',
@@ -43,7 +44,7 @@ const Dashboard = () => {
         productGrid: {
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '1.5rem',
+            gap: '50px',
         },
         productCard: {
             display: 'flex',
@@ -52,25 +53,31 @@ const Dashboard = () => {
             backgroundColor: '#f9f9f9',
             borderRadius: '8px',
             padding: '1rem',
-            boxShadow: '0 0 5px rgba(0, 0, 0, 0.1)',
             cursor: 'pointer',
             transition: 'transform 0.2s',
-            height: '300px',
+            height: '400px', // Adjusted for consistent height
+            overflow: 'hidden',
+            textAlign: 'center',
+            height: '300px'
         },
         productCardHover: {
             transform: 'scale(1.05)',
         },
         productImage: {
             width: 'auto',
-            maxHeight: '150px',
+            maxHeight: '200px',
             borderRadius: '8px',
             objectFit: 'cover',
+            marginBottom: '1rem',
         },
         productTitle: {
-            marginTop: '1rem',
+            marginTop: 'auto',
             fontSize: '1rem',
             color: '#333',
-            textAlign: 'center',
+            height: '3rem',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            marginBottom: '1rem',
         },
     };
 
