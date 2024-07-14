@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from '../Confing/Firebase'; // Make sure the path to your Firebase config is correct
+import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from '../Confing/Firebase';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -8,6 +8,7 @@ import IconButton from '@mui/material/IconButton';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import googleLogo from '../assets/google-logo.png'; // Ensure you have a Google logo image in your assets
 
 const Signup = () => {
   const [email, setEmail] = useState('');
@@ -21,6 +22,17 @@ const Signup = () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       setSuccess('User signed up successfully!');
+      setError('');
+    } catch (error) {
+      setError(error.message);
+      setSuccess('');
+    }
+  };
+
+  const handleGoogleSignup = async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      setSuccess('User signed up successfully with Google!');
       setError('');
     } catch (error) {
       setError(error.message);
@@ -88,6 +100,23 @@ const Signup = () => {
             Signup
           </Button>
         </form>
+        <Button
+          variant="contained"
+          onClick={handleGoogleSignup}
+          style={{
+            backgroundColor: '#ffffff',
+            color: '#000000',
+            border: '1px solid #ddd',
+            marginTop: '10px',
+            textTransform: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <img src={googleLogo} alt="Google Logo" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
+          Signup with Google
+        </Button>
         {error && <p className="alert alert-danger mt-3" style={{ marginTop: '10px' }}>{error}</p>}
         {success && <p className="alert alert-success mt-3" style={{ marginTop: '10px' }}>{success}</p>}
       </div>
