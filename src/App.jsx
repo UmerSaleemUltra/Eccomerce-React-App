@@ -1,5 +1,6 @@
 import React from 'react';
 import Router from './Confing/Router'; 
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 function App() {
   return (
