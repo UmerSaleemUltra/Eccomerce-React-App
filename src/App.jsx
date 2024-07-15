@@ -1,7 +1,5 @@
-import { useState, useEffect } from 'react';
-import Router from '../src/Confing/Router'; // Ensure the directory name is correct
-import firebase from 'firebase/compat/app';
-import './index.css';
+import React from 'react';
+import Router from './Confing/Router'; 
 
 function App() {
   return (
@@ -9,7 +7,6 @@ function App() {
       <header className="App-header">
         <Router />
       </header>
-     
     </div>
   );
 }
