@@ -4,7 +4,7 @@ import Dashboard from '../Views/Dashboard';
 import Detail from '../Views/Detail';
 import Signup from '../Views/Signup';
 import Login from '../Views/Login';
-
+import AddProduct from '../Views/AddProduct';
 const Router = () => {
     const router = createBrowserRouter([
         {
@@ -23,6 +23,11 @@ const Router = () => {
             path: "/Login",
             element: <Login />,
         },
+        {
+            path: "/AddProduct",
+            element: <AddProduct />,
+        },
+        
     ]);
 
     return <RouterProvider router={router} />;

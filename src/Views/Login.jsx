@@ -1,127 +1,72 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from '../Confing/Firebase';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import googleLogo from '../assets/google-logo.png'; // Ensure you have a Google logo image in your assets
+import { LoginUser } from "../Confing/Firebase";
+import { useNavigate } from 'react-router-dom';
+import { Container, Typography, TextField, Button, Box } from '@mui/material';
 
-const Signup = () => {
+const Login = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+  const SignIn = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
-      setSuccess('User signed up successfully!');
-      setError('');
-    } catch (error) {
-      setError(error.message);
-      setSuccess('');
+      await LoginUser(email, password);
+      alert('Successfully logged in');
+      navigate('/');
+    } catch (e) {
+      alert(e.message);
     }
   };
-
-  const handleGoogleSignup = async () => {
-    try {
-      await signInWithPopup(auth, googleProvider);
-      setSuccess('User signed up successfully with Google!');
-      setError('');
-    } catch (error) {
-      setError(error.message);
-      setSuccess('');
-    }
-  };
-
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
+const  onBack = () =>{ 
+navigate(-1);
+};
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <div className="card" style={{ padding: '20px', maxWidth: '400px', width: '100%', boxShadow: '0 0 10px rgba(0,0,0,0.1)' }}>
-        <h2 className="text-center mb-4">Login</h2>
-        <form onSubmit={handleSignup}>
-          <div className="form-group mb-3">
-            <TextField
-              label="Email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                style: { color: '#007bff' },
-              }}
-            />
-          </div>
-          <div className="form-group mb-3">
-            <TextField
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-              margin="normal"
-              variant="outlined"
-              InputLabelProps={{
-                style: { color: '#007bff' },
-              }}
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={handleClickShowPassword}
-                      onMouseDown={handleMouseDownPassword}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </div>
-          <Button type="submit" variant="contained" className="btn btn-primary w-100" style={{ marginTop: '10px' }}>
-            Signup
-          </Button>
-        </form>
+    <Container maxWidth="sm" className="mt-5">
+       <Button variant="contained" color="primary" onClick={onBack}>
+                Back
+            </Button>
+      <Typography component="h1" variant="h5" className="text-center mb-4">
+        Welcome
+      </Typography>
+      <Box component="form" noValidate sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          autoFocus
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="mb-3"
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="current-password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="mb-3"
+        />
         <Button
+          fullWidth
           variant="contained"
-          onClick={handleGoogleSignup}
-          style={{
-            backgroundColor: '#ffffff',
-            color: '#000000',
-            border: '1px solid #ddd',
-            marginTop: '10px',
-            textTransform: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
+          color="primary"
+          onClick={SignIn}
+          className="mb-3"
         >
-          <img src={googleLogo} alt="Google Logo" style={{ width: '20px', height: '20px', marginRight: '10px' }} />
-          Signup with Google
+          Login
         </Button>
-        {error && <p className="alert alert-danger mt-3" style={{ marginTop: '10px' }}>{error}</p>}
-        {success && <p className="alert alert-success mt-3" style={{ marginTop: '10px' }}>{success}</p>}
-      </div>
-    </div>
+      </Box>
+    </Container>
   );
 };
 
-export default Signup;
+export default Login;

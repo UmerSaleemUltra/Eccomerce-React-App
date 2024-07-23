@@ -19,6 +19,7 @@ const Dashboard = () => {
         navigate(`/detail/${item.id}`);
     };
 
+
     // Inline styles
     const styles = {
         container: {
@@ -90,6 +91,11 @@ const Dashboard = () => {
                     Login
                 </Button>
                 <Button variant="contained" color="secondary" component={Link} to="/signup">
+                    Signup
+                </Button>
+
+              
+                <Button variant="contained" color="secondary" component={Link} to="/AddProduct">
                     Signup
                 </Button>
             </div>
