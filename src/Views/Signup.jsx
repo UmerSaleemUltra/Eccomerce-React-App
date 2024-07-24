@@ -1,104 +1,73 @@
 import React, { useState } from 'react';
-import { SignUpUser } from "../Confing/Firebase";
-import { useNavigate } from 'react-router-dom';
-import { Container, Typography, TextField, Button, Box } from '@mui/material';
+import { SignUpUser } from '../Confing/Firebase';
+import Button from '@mui/material/Button';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const SignUp = () => {
-  const navigate = useNavigate();
-  const [fullName, setFullName] = useState('');
-  const [age, setAge] = useState('');
+export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [age, setAge] = useState('');
 
-  const SignUp = async () => {
+  const handleSignUp = async () => {
     try {
-      await SignUpUser({ email, password, fullName, age });
-      alert("Successfully signed up");
-      navigate("/login");
+      const user = await SignUpUser({ email, password, fullName, age });
+      alert('User signed up successfully!');
+      console.log(user);
     } catch (e) {
+      console.error('Error signing up:', e);
       alert(e.message);
     }
   };
-  const onBack = () => {
-    navigate(-1);
-};
-
 
   return (
-    
-    <Container maxWidth="md" sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-        <Button variant="contained" color="primary" onClick={onBack}>
-                Back
-            </Button>
-
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', maxWidth: 400, bgcolor: 'background.paper', p: 4, borderRadius: 2, boxShadow: 3 }}>
-        <Typography component="h1" variant="h5">
-          Sign Up
-        </Typography>
-        <Box component="form" sx={{ mt: 3 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="fullName"
-            label="Full Name"
-            name="fullName"
-            autoComplete="name"
-            autoFocus
-            value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
-            className="mb-3"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="age"
-            label="Age"
-            name="age"
-            type="number"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
-            className="mb-3"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="email"
-            label="Email Address"
-            name="email"
-            autoComplete="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="mb-3"
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            label="Password"
-            type="password"
-            id="password"
-            autoComplete="current-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="mb-3"
-          />
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={SignUp}
-          >
-            Sign Up
-          </Button>
-        </Box>
-      </Box>
-    </Container>
+    <div className="container mt-5">
+      <h2>Sign Up</h2>
+      <div className="form-group">
+        <label htmlFor="fullName">Full Name</label>
+        <input
+          id="fullName"
+          type="text"
+          className="form-control"
+          value={fullName}
+          placeholder="Full Name"
+          onChange={e => setFullName(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="age">Age</label>
+        <input
+          id="age"
+          type="number"
+          className="form-control"
+          value={age}
+          placeholder="Age"
+          onChange={e => setAge(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          className="form-control"
+          value={email}
+          placeholder="Email"
+          onChange={e => setEmail(e.target.value)}
+        />
+      </div>
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          className="form-control"
+          value={password}
+          placeholder="Password"
+          onChange={e => setPassword(e.target.value)}
+        />
+      </div>
+      <Button variant="contained" color="primary" onClick={handleSignUp}>Sign Up</Button>
+    </div>
   );
-};
-
-export default SignUp;
+}

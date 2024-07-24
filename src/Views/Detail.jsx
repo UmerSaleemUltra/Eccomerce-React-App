@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
+import { getProductById } from '../Confing/Firebase'; // Import the function to get a product by ID
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Detail = () => {
@@ -14,12 +15,8 @@ const Detail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await fetch(`https://fakestoreapi.com/products/${id}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch product');
-                }
-                const data = await response.json();
-                setProduct(data);
+                const product = await getProductById(id); // Fetch the product from Firestore
+                setProduct(product);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching product details:', error);
@@ -53,7 +50,8 @@ const Detail = () => {
             textAlign: 'center',
         },
         image: {
-            width: '100px',
+            width: '100%',
+            maxWidth: '400px',
             borderRadius: '8px',
             marginBottom: '1rem',
         },
@@ -91,9 +89,12 @@ const Detail = () => {
                 Back
             </Button>
             <h1 style={styles.title}>{product.title}</h1>
-            <img src={product.image} alt={product.title} style={styles.image} />
+            <img src={product.imageUrl} alt={product.title} style={styles.image} />
             <p style={styles.description}>{product.description}</p>
             <p style={styles.price}>Price: ${product.price}</p>
+            <Button variant="contained" color="primary" onClick={() => alert('Added to cart')} style={styles.button}>
+                Add To Cart
+            </Button>
         </Container>
     );
 };

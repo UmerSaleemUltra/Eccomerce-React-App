@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
+import { getProducts } from '../Confing/Firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = () => {
@@ -9,16 +10,21 @@ const Dashboard = () => {
     const [products, setProducts] = useState([]);
 
     useEffect(() => {
-        fetch('https://fakestoreapi.com/products/')
-            .then(res => res.json())
-            .then(json => setProducts(json))
-            .catch(error => console.error('Error fetching products:', error));
+        const fetchProducts = async () => {
+            try {
+                const products = await getProducts();
+                setProducts(products);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProducts();
     }, []);
 
     const goToDetail = (item) => {
         navigate(`/detail/${item.id}`);
     };
-
 
     // Inline styles
     const styles = {
@@ -59,7 +65,6 @@ const Dashboard = () => {
             height: '400px', // Adjusted for consistent height
             overflow: 'hidden',
             textAlign: 'center',
-            height: '300px'
         },
         productCardHover: {
             transform: 'scale(1.05)',
@@ -83,7 +88,6 @@ const Dashboard = () => {
     };
 
     return (
-        
         <Container style={styles.container}>
             <h1 style={styles.title}>Dashboard</h1>
             <div style={styles.buttonGroup}>
@@ -93,10 +97,8 @@ const Dashboard = () => {
                 <Button variant="contained" color="secondary" component={Link} to="/signup">
                     Signup
                 </Button>
-
-              
-                <Button variant="contained" color="secondary" component={Link} to="/AddProduct">
-                    Signup
+                <Button variant="contained" color="secondary" component={Link} to="/addproduct">
+                    Add Product
                 </Button>
             </div>
 
@@ -109,7 +111,7 @@ const Dashboard = () => {
                         onMouseEnter={(e) => (e.currentTarget.style.transform = styles.productCardHover.transform)}
                         onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
                     >
-                        <img src={item.image} alt={item.title} style={styles.productImage} />
+                        <img src={item.imageUrl} alt={item.title} style={styles.productImage} />
                         <h5 style={styles.productTitle}>{item.title}</h5>
                     </div>
                 ))}
@@ -119,5 +121,3 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-
-

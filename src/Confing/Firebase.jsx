@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, addDoc } from "firebase/firestore";
+import { getFirestore, collection, addDoc, getDoc, doc, getDocs } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 const firebaseConfig = {
@@ -40,14 +40,47 @@ export const LoginUser = async (email, password) => {
 };
 
 // Function to add a product
-export const addProduct = async (product) => {
-  const { title, description, price, image } = product;
+export const addProduct = async ({ title, description, price, image }) => {
+  try {
+    const user = auth.currentUser;
+    if (!user) {
+      throw new Error("User not authenticated");
+    }
 
-  const storageRef = ref(storage, 'products/' + image.name);
-  await uploadBytes(storageRef, image);
-  const url = await getDownloadURL(storageRef);
+    // Upload image to Firebase Storage
+    const imageRef = ref(storage, `productImages/${image.name}`);
+    const snapshot = await uploadBytes(imageRef, image);
+    const imageUrl = await getDownloadURL(snapshot.ref);
 
-  return addDoc(collection(db, "products"), { uid: products.uid, title, description, price, image: url });
+    // Add product details to Firestore
+    const docRef = await addDoc(collection(db, "products"), { title, description, price, imageUrl, userId: user.uid });
+    return docRef.id;
+
+  } catch (error) {
+    console.error("Error adding product:", error);
+    throw error;
+  }
+};
+
+// Function to get all products
+export const getProducts = async () => {
+  const querySnapshot = await getDocs(collection(db, "products"));
+  const products = [];
+  querySnapshot.forEach((doc) => {
+    products.push({ id: doc.id, ...doc.data() });
+  });
+  return products;
+};
+
+// Function to get a single product by ID
+export const getProductById = async (id) => {
+  const docRef = doc(db, "products", id);
+  const docSnap = await getDoc(docRef);
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() };
+  } else {
+    throw new Error("No such document!");
+  }
 };
 
 export { auth, onAuthStateChanged };
