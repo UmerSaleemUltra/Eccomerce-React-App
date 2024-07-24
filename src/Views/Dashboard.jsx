@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import { getProducts } from '../Confing/Firebase';
+import { getProducts } from '../Confing/Firebase'; // Import Firebase function to get products
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = () => {
@@ -12,8 +12,20 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const products = await getProducts();
-                setProducts(products);
+                // Fetch products from Fake Store API
+                const fakeStoreResponse = await fetch('https://fakestoreapi.com/products/');
+                const fakeStoreProducts = await fakeStoreResponse.json();
+                console.log('Fake Store Products:', fakeStoreProducts);
+
+                // Fetch products from Firestore
+                const firebaseProducts = await getProducts();
+                console.log('Firebase Products:', firebaseProducts);
+
+                // Combine both product arrays
+                const allProducts = [...fakeStoreProducts, ...firebaseProducts];
+                console.log('All Products:', allProducts);
+
+                setProducts(allProducts);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }
@@ -111,7 +123,7 @@ const Dashboard = () => {
                         onMouseEnter={(e) => (e.currentTarget.style.transform = styles.productCardHover.transform)}
                         onMouseLeave={(e) => (e.currentTarget.style.transform = 'none')}
                     >
-                        <img src={item.imageUrl} alt={item.title} style={styles.productImage} />
+                        <img src={item.imageUrl || item.image} alt={item.title} style={styles.productImage} />
                         <h5 style={styles.productTitle}>{item.title}</h5>
                     </div>
                 ))}
