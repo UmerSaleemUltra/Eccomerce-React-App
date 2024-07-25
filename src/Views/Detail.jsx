@@ -15,7 +15,18 @@ const Detail = () => {
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const product = await getProductById(id); // Fetch the product from Firestore
+                // Check if the product ID is a Firestore ID or a Fake Store API ID
+                let product;
+                if (id.length === 20) { // Assuming Firestore IDs are 20 characters long
+                    product = await getProductById(id);
+                } else {
+                    const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch product');
+                    }
+                    product = await response.json();
+                }
+
                 setProduct(product);
                 setLoading(false);
             } catch (error) {
@@ -89,7 +100,7 @@ const Detail = () => {
                 Back
             </Button>
             <h1 style={styles.title}>{product.title}</h1>
-            <img src={product.imageUrl} alt={product.title} style={styles.image} />
+            <img src={product.imageUrl || product.image} alt={product.title} style={styles.image} />
             <p style={styles.description}>{product.description}</p>
             <p style={styles.price}>Price: ${product.price}</p>
             <Button variant="contained" color="primary" onClick={() => alert('Added to cart')} style={styles.button}>

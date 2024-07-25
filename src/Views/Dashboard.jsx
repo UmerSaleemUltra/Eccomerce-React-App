@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
-import { getProducts } from '../Confing/Firebase'; // Import Firebase function to get products
+import { getProducts } from '../Confing/Firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Dashboard = () => {
@@ -12,20 +12,11 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                // Fetch products from Fake Store API
-                const fakeStoreResponse = await fetch('https://fakestoreapi.com/products/');
-                const fakeStoreProducts = await fakeStoreResponse.json();
-                console.log('Fake Store Products:', fakeStoreProducts);
-
                 // Fetch products from Firestore
                 const firebaseProducts = await getProducts();
                 console.log('Firebase Products:', firebaseProducts);
 
-                // Combine both product arrays
-                const allProducts = [...fakeStoreProducts, ...firebaseProducts];
-                console.log('All Products:', allProducts);
-
-                setProducts(allProducts);
+                setProducts(firebaseProducts);
             } catch (error) {
                 console.error('Error fetching products:', error);
             }

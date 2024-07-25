@@ -81,7 +81,6 @@ export default function AddProduct() {
       </div>
       <br />
       <Button variant="contained" color="primary" onClick={onSubmit}>Submit</Button>
-      <Button variant="contained" color="primary">See Product</Button>
 
     </div>
   );
