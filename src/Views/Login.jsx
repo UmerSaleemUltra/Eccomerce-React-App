@@ -19,6 +19,7 @@ export default function Login() {
       const user = await LoginUser(email, password);
       alert('User logged in successfully!');
       console.log(user);
+      navigate('/dashboard'); // Redirect to the dashboard route
     } catch (e) {
       console.error('Error logging in:', e);
       alert(e.message);
