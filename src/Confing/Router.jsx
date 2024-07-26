@@ -8,7 +8,7 @@ import AddProduct from '../Views/AddProduct';
 
 const router = createBrowserRouter([
     {
-        path: "/",
+        path: "/Dashboard",
         element: <Dashboard />,
     },
     {
@@ -20,7 +20,7 @@ const router = createBrowserRouter([
         element: <Signup />,
     },
     {
-        path: "/login",
+        path: "/",
         element: <Login />,
     },
     {
