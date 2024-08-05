@@ -110,7 +110,7 @@ const Dashboard = () => {
     return (
         <Container style={styles.container}>
             <h1 style={styles.title}>Dashboard</h1>
-            {email && <Typography variant="h6" align="center">Welcome, {email}!</Typography>}
+           
             <div style={styles.buttonGroup}>
                 <Button variant="contained" color="secondary" component={Link} to="/addproduct">
                     Add Product

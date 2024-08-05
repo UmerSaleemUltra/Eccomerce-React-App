@@ -73,13 +73,19 @@ export const getProducts = async () => {
 };
 
 // Function to get a single product by ID
-export const getProductById = async (id) => {
-  const docRef = doc(db, "products", id);
-  const docSnap = await getDoc(docRef);
-  if (docSnap.exists()) {
-    return { ...docSnap.data() };
-  } else {
-    throw new Error("No such document!");
+export const getSingleProduct = async (productId) => {
+  try {
+    const docRef = doc(db, "products", productId);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      return { id: docSnap.id, ...docSnap.data() };
+    } else {
+      throw new Error("No such product found!");
+    }
+  } catch (error) {
+    console.error("Error getting product:", error);
+    throw error;
   }
 };
 
