@@ -1,104 +1,149 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getSingleProduct } from '../Confing/Firebase'; // Correct import path
+import { getSingleProduct } from '../Confing/Firebase';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart } from '../../Store/Cartslice';
-import { Button, Card, CardContent, Typography } from '@mui/material';
-import CircularProgress from '@mui/material/CircularProgress';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import { addToCart, removeFromCart } from '../../Store/Cartslice'; // Import actions
+import {
+  Box,
+  Button,
+  Typography,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  Container,
+  Paper,
+} from '@mui/material';
 
-const Detail = () => {
+export default function Detail() {
   const navigate = useNavigate();
-  const { id } = useParams(); // Make sure the parameter matches your route setup
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // For handling errors
+  const params = useParams();
+  const [product, setProduct] = useState({});
   const dispatch = useDispatch();
 
-  const color = useSelector((state) => state.color); // Redux selector
-  console.log('color', color);
+  const themeColor = useSelector((state) => state.theme.color);
+  const cartItems = useSelector((state) => state.cart.cart);
 
   useEffect(() => {
-    const fetchProduct = async () => {
+    const fetchData = async () => {
       try {
-        const productData = await getSingleProduct(id);
-        console.log("Fetched Product:", productData); // Debugging log
-        setProduct(productData);
+        const product = await getSingleProduct(params.id);
+        setProduct(product);
       } catch (error) {
-        console.error('Error fetching product details:', error);
-        setError('Failed to load product details. Please try again later.');
-      } finally {
-        setLoading(false);
+        console.error('Error fetching product:', error);
       }
     };
 
-    fetchProduct();
-  }, [id]);
+    fetchData();
+  }, [params.id]);
+
+  // Find the product in the cart
+  const cartProduct = cartItems.find((item) => item.id === product.id);
 
   const onBack = () => {
     navigate(-1);
   };
 
-  if (loading) {
-    return (
-      <div className="container my-4" style={{ textAlign: 'center' }}>
-        <CircularProgress />
-        <Typography variant="body1" style={{ marginTop: '10px' }}>
-          Loading...
-        </Typography>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="container my-4" style={{ textAlign: 'center', color: 'red' }}>
-        <Typography variant="h6">{error}</Typography>
-      </div>
-    );
-  }
-
   return (
-    <div className="container my-4" style={{ backgroundColor: color }}>
-      <Button variant="outlined" color="primary" onClick={onBack}>
-        Back
-      </Button>
-
-      <Card className="my-4">
-        <CardContent>
-          <Typography variant="h4" component="h2">
-            {product.title || 'No Title Available'}
-          </Typography>
-          <Typography variant="h6" color="textSecondary">
-            Rs. {product.price || 'N/A'}
-          </Typography>
-          {product.imageUrl ? (
-            <img
-              src={product.imageUrl}
-              alt={product.title || 'Product Image'}
-              className="img-fluid my-3"
-              style={{ maxWidth: '600px' }}
-            />
-          ) : (
-            <Typography variant="body2" color="error">
-              Image not available
-            </Typography>
-          )}
-          <Typography variant="body1">
-            {product.description || 'No Description Available'}
-          </Typography>
+    <Container sx={{ mt: 5 }}>
+      <Paper elevation={4} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+        <Box
+          sx={{
+            backgroundColor: themeColor,
+            borderRadius: 2,
+            p: 3,
+            boxShadow: 3,
+          }}
+        >
           <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => dispatch(addToCart(product))}
-            className="mt-3"
+            onClick={onBack}
+            variant="outlined"
+            color="primary"
+            sx={{ mb: 3 }}
           >
-            Add to Cart
+            Back
           </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
+          <Grid container spacing={4} alignItems="center">
+            <Grid item xs={12} md={6}>
+              <Card sx={{ borderRadius: 2 }}>
+                <CardMedia
+                  component="img"
+                  height="400"
+                  image={product.imageUrl}
+                  alt={product.title}
+                  sx={{
+                    borderRadius: 2,
+                    objectFit: 'cover',
+                    boxShadow: 2,
+                  }}
+                />
+              </Card>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <CardContent>
+                <Typography
+                  variant="h4"
+                  gutterBottom
+                  sx={{ color: 'text.primary' }}
+                >
+                  {product.title}
+                </Typography>
+                <Typography
+                  variant="h5"
+                  color="textSecondary"
+                  gutterBottom
+                  sx={{ fontWeight: 'bold' }}
+                >
+                  Rs. {product.price}
+                </Typography>
+                <Typography variant="body1" paragraph>
+                  {product.description}
+                </Typography>
 
-export default Detail;
+                {/* Display current quantity */}
+                {cartProduct && (
+                  <Typography variant="body1" sx={{ mb: 2 }}>
+                    Quantity in Cart: {cartProduct.quantity}
+                  </Typography>
+                )}
+
+                {/* Add to Cart Button */}
+                <Button
+                  onClick={() => dispatch(addToCart(product))}
+                  variant="contained"
+                  color="secondary"
+                  sx={{
+                    mt: 2,
+                    fontWeight: 'bold',
+                    paddingX: 3,
+                    paddingY: 1,
+                    mr: 1,
+                  }}
+                >
+                  Add to Cart
+                </Button>
+
+                {/* Remove from Cart Button */}
+                {cartProduct && (
+                  <Button
+                    onClick={() => dispatch(removeFromCart(product))}
+                    variant="outlined"
+                    color="error"
+                    sx={{
+                      mt: 2,
+                      fontWeight: 'bold',
+                      paddingX: 3,
+                      paddingY: 1,
+                    }}
+                  >
+                    Remove from Cart
+                  </Button>
+                )}
+              </CardContent>
+            </Grid>
+          </Grid>
+        </Box>
+      </Paper>
+    </Container>
+  );
+}

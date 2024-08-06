@@ -6,6 +6,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { getProducts } from '../Confing/Firebase';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { Box } from '@mui/material';
+
 
 const Dashboard = () => {
     const navigate = useNavigate();
@@ -107,8 +110,13 @@ const Dashboard = () => {
         },
     };
 
+    const themeColor = useSelector(state => state.theme.color);
+
+
     return (
-        <Container style={styles.container}>
+        <Box sx={{ backgroundColor: themeColor, p: 3 }}>
+
+        <Container style={styles.container }>
             <h1 style={styles.title}>Dashboard</h1>
            
             <div style={styles.buttonGroup}>
@@ -148,6 +156,7 @@ const Dashboard = () => {
                 </div>
             )}
         </Container>
+        </Box>
     );
 };
 

@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Link from '@mui/material/Link';
+import { useSelector, useDispatch } from 'react-redux';
+
 
 export default function Signup() {
   const [email, setEmail] = useState('');
@@ -29,9 +32,13 @@ export default function Signup() {
     }
   };
 
+  const themeColor = useSelector(state => state.theme.color);
+  
+
   return (
-    <Container maxWidth="xs">
-      <Box mt={5} textAlign="center">
+      
+    <Container sx={{backgroundColor: themeColor}} maxWidth="xs">
+      <Box  mt={5} textAlign="center">
         <Typography variant="h4" component="h1" gutterBottom>
           Sign Up
         </Typography>
@@ -89,9 +96,13 @@ export default function Signup() {
             >
               Sign Up
             </Button>
+            <Link href="/login" variant="body2">
+             have an account? 
+          </Link>
           </Grid>
         </Grid>
       </Box>
     </Container>
+
   );
 }

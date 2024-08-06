@@ -6,8 +6,9 @@ import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { Link } from '@mui/material';
+import { useSelector, useDispatch } from 'react-redux';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -26,9 +27,11 @@ export default function Login() {
     }
   };
 
+  const themeColor = useSelector(state => state.theme.color);
+
   return (
-    <Container maxWidth="xs">
-      <Box mt={5} textAlign="center">
+    <Container sx={{backgroundColor: themeColor}} maxWidth="xs">
+      <Box  mt={5} textAlign="center">
         <Typography variant="h4" component="h1" gutterBottom>
           Login
         </Typography>
@@ -62,9 +65,7 @@ export default function Login() {
           Login
         </Button>
         <Box mt={2}>
-          <Link href="/signup" variant="body2">
-            Don't have an account? Sign up
-          </Link>
+       
         </Box>
       </Box>
     </Container>

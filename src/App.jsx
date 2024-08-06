@@ -29,7 +29,7 @@ function App() {
         <div className="App">
           <header className="App-header">
             <Header />
-            <h3 className='text-center text-black'>Welcome {user?.email}</h3>
+            <h5 className='text-center text-black'>Welcome {user?.email}</h5>
             <AppRouter />
           </header>
         </div>

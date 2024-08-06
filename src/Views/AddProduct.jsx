@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { addProduct, auth } from '../Confing/Firebase';
 import Button from '@mui/material/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useSelector, useDispatch } from 'react-redux';
+import { Box } from '@mui/material';
 
 export default function AddProduct() {
   const [title, setTitle] = useState('');
@@ -33,9 +35,12 @@ export default function AddProduct() {
   const goback = () =>{
   Navigate('/productcard')
   }
+  const themeColor = useSelector(state => state.theme.color);
+
 
   return (
-    <div className="container mt-5">
+    <Box sx={{ backgroundColor: themeColor, p: 3 }}>
+    <div className="container mt-5 ">
       <h2>Add Product Form</h2>
       <div className="form-group">
         <label htmlFor="title">Title</label>
@@ -81,7 +86,8 @@ export default function AddProduct() {
       </div>
       <br />
       <Button variant="contained" color="primary" onClick={onSubmit}>Submit</Button>
-
-    </div>
+      </div>
+</Box>
+  
   );
 }
