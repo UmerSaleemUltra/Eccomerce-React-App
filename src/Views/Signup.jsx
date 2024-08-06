@@ -33,8 +33,7 @@ export default function Signup() {
   };
 
   const themeColor = useSelector(state => state.theme.color);
-  
-
+ 
   return (
       
     <Container sx={{backgroundColor: themeColor}} maxWidth="xs">
