@@ -1,8 +1,26 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, collection, addDoc, getDocs, doc, getDoc } from "firebase/firestore";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  getDoc,
+} from "firebase/firestore";
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL,
+} from "firebase/storage";
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDkwWFCHHLNTKXY-10EiLh8WTpwtDCA3lo",
   authDomain: "expertizo-authentication.firebaseapp.com",
@@ -10,33 +28,48 @@ const firebaseConfig = {
   storageBucket: "expertizo-authentication.appspot.com",
   messagingSenderId: "71504779524",
   appId: "1:71504779524:web:ebec9367dd3d28849a5851",
-  measurementId: "G-GPDTKE59BR"
+  measurementId: "G-GPDTKE59BR",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
-// Initialize Firebase Authentication and get a reference to the service
+// Initialize Firebase services
 const auth = getAuth(app);
-
-// Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
-
-// Initialize Firebase Storage and get a reference to the service
 const storage = getStorage(app);
 
 // Function to register a new user
 export const SignUpUser = async ({ email, password, fullName, age }) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-  const user = userCredential.user;
-  await addDoc(collection(db, "users"), { uid: user.uid, email, fullName, age });
-  return user;
+  try {
+    const userCredential = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+    const user = userCredential.user;
+    await addDoc(collection(db, "users"), {
+      uid: user.uid,
+      email,
+      fullName,
+      age,
+    });
+    return user;
+  } catch (error) {
+    console.error("Error signing up user:", error);
+    throw error;
+  }
 };
 
 // Function to log in a user
 export const LoginUser = async (email, password) => {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password);
-  return userCredential.user;
+  try {
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    return userCredential.user;
+  } catch (error) {
+    console.error("Error logging in user:", error);
+    throw error;
+  }
 };
 
 // Function to add a product
@@ -53,9 +86,14 @@ export const addProduct = async ({ title, description, price, image }) => {
     const imageUrl = await getDownloadURL(snapshot.ref);
 
     // Add product details to Firestore
-    const docRef = await addDoc(collection(db, "products"), { title, description, price, imageUrl, userId: user.uid });
+    const docRef = await addDoc(collection(db, "products"), {
+      title,
+      description,
+      price,
+      imageUrl,
+      userId: user.uid,
+    });
     return docRef.id;
-
   } catch (error) {
     console.error("Error adding product:", error);
     throw error;
@@ -64,12 +102,17 @@ export const addProduct = async ({ title, description, price, image }) => {
 
 // Function to get all products
 export const getProducts = async () => {
-  const querySnapshot = await getDocs(collection(db, "products"));
-  const products = [];
-  querySnapshot.forEach((doc) => {
-    products.push({ id: doc.id, ...doc.data() });
-  });
-  return products;
+  try {
+    const querySnapshot = await getDocs(collection(db, "products"));
+    const products = [];
+    querySnapshot.forEach((doc) => {
+      products.push({ id: doc.id, ...doc.data() });
+    });
+    return products;
+  } catch (error) {
+    console.error("Error getting products:", error);
+    throw error;
+  }
 };
 
 // Function to get a single product by ID
@@ -89,4 +132,5 @@ export const getSingleProduct = async (productId) => {
   }
 };
 
-export { auth, onAuthStateChanged };
+// Exporting Firebase services for external use
+export { db, auth, onAuthStateChanged, storage };
