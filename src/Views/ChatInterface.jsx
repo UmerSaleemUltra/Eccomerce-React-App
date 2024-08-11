@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db, auth, storage } from "../Confing/Firebase"; // Adjust the import path as necessary
-import { collection, addDoc, onSnapshot, query, orderBy } from "firebase/firestore";
+import { collection, addDoc, onSnapshot, query, orderBy, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Box, Paper, Typography, TextField, Button, IconButton, Dialog } from "@mui/material";
 import ChatIcon from '@mui/icons-material/Chat';
@@ -14,14 +14,19 @@ const UserChat = () => {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const q = query(collection(db, "messages"), orderBy("timestamp"));
-    const unsubscribeMessages = onSnapshot(q, (snapshot) => {
-      setMessages(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })));
-    });
+    const user = auth.currentUser;
 
-    return () => {
-      unsubscribeMessages();
-    };
+    if (user) {
+      const q = query(
+        collection(db, "chatRooms", user.uid, "messages"),
+        orderBy("timestamp")
+      );
+      const unsubscribeMessages = onSnapshot(q, (snapshot) => {
+        setMessages(snapshot.docs.map((doc) => ({ id: doc.id, data: doc.data() })));
+      });
+
+      return () => unsubscribeMessages();
+    }
   }, []);
 
   const handleFileChange = (e) => {
@@ -48,7 +53,7 @@ const UserChat = () => {
       return;
     }
 
-    await addDoc(collection(db, "messages"), {
+    await addDoc(collection(db, "chatRooms", user.uid, "messages"), {
       text: input,
       fileURL,
       fileName: file ? file.name : null,
@@ -59,7 +64,7 @@ const UserChat = () => {
     });
 
     setInput("");
-    setFile(null); // Clear the file input after sending
+    setFile(null);
   };
 
   const handleClickOpen = () => {
@@ -72,7 +77,6 @@ const UserChat = () => {
 
   return (
     <div>
-      {/* Floating Chat Icon */}
       <IconButton
         onClick={handleClickOpen}
         sx={{
@@ -86,13 +90,12 @@ const UserChat = () => {
           },
           borderRadius: '50%',
           padding: '15px',
-          zIndex: 1000, // Ensure it stays on top of other elements
+          zIndex: 1000,
         }}
       >
         <ChatIcon />
       </IconButton>
 
-      {/* Chat Dialog */}
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
         <Box sx={{ display: "flex", flexDirection: "column", height: "80vh" }}>
           <Box sx={{ display: "flex", justifyContent: "space-between", padding: 2, borderBottom: "1px solid #ddd" }}>
