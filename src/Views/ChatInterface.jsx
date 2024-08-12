@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { db, auth, storage } from "../Confing/Firebase"; // Adjust the import path as necessary
+import { db, auth, storage } from "../Config/Firebase"; // Adjust the import path as necessary
 import { collection, addDoc, onSnapshot, query, orderBy, doc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Box, Paper, Typography, TextField, Button, IconButton, Dialog } from "@mui/material";
