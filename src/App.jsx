@@ -5,7 +5,6 @@ import Header from "./Views/Header";
 import { store, persistor } from "../Store/Store";
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import UserChat from './Views/ChatInterface';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -31,7 +30,6 @@ function App() {
           <header className="App-header">
             <Header />
             <h5 className='text-center text-black'>Welcome {user?.email}</h5>
-            <UserChat />
             <AppRouter />
           </header>
         </div>
