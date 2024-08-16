@@ -5,158 +5,140 @@ import Container from '@mui/material/Container';
 import CircularProgress from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 import { getProducts } from '../Confing/Firebase';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { useSelector, useDispatch } from 'react-redux';
-import { Box } from '@mui/material';
-
-
+import { Box, Grid, Card, CardMedia, CardContent, CardActionArea, Divider } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { signOut, onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../Confing/Firebase'; 
 
 const Dashboard = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { email } = location.state || {}; // Extract email from state
+    const { email } = location.state || {}; 
     const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [user, setUser] = useState(null); 
+    const themeColor = useSelector(state => state.theme.color);
 
     useEffect(() => {
-        const fetchProducts = async () => {
-            try {
-                const firebaseProducts = await getProducts();
-                console.log('Firebase Products:', firebaseProducts);
-                setProducts(firebaseProducts);
-            } catch (error) {
-                console.error('Error fetching products:', error);
-                setError('Failed to load products. Please try again later.');
-            } finally {
-                setLoading(false);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                navigate('/login'); 
             }
-        };
+        });
 
-        fetchProducts();
-    }, []);
+        return () => unsubscribe();
+    }, [navigate]);
+
+    useEffect(() => {
+        if (user) {
+            const fetchProducts = async () => {
+                try {
+                    const firebaseProducts = await getProducts();
+                    setProducts(firebaseProducts);
+                } catch (error) {
+                    setError('Failed to load products. Please try again later.');
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchProducts();
+        }
+    }, [user]);
 
     const goToDetail = (item) => {
         navigate(`/detail/${item.id}`);
     };
 
-    const styles = {
-        container: {
-            backgroundColor: '#fff',
-            borderRadius: '8px',
-            padding: '2rem',
-            maxWidth: '1200px',
-            margin: '0 auto',
-            width: '100%',
-        },
-        title: {
-            textAlign: 'center',
-            marginBottom: '2rem',
-            fontFamily: 'Roboto, sans-serif',
-            color: '#333',
-        },
-        buttonGroup: {
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '1rem',
-            marginBottom: '2rem',
-        },
-        productGrid: {
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
-            gap: '50px',
-        },
-        productCard: {
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            backgroundColor: '#f9f9f9',
-            borderRadius: '8px',
-            padding: '1rem',
-            cursor: 'pointer',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            height: '400px',
-            overflow: 'hidden',
-            textAlign: 'center',
-        },
-        productCardHover: {
-            transform: 'scale(1.05)',
-            boxShadow: '0 8px 16px rgba(0,0,0,0.3)',
-        },
-        productImage: {
-            width: 'auto',
-            maxHeight: '200px',
-            borderRadius: '8px',
-            objectFit: 'cover',
-            marginBottom: '1rem',
-        },
-        productTitle: {
-            marginTop: 'auto',
-            fontSize: '1rem',
-            color: '#333',
-            height: '3rem',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            marginBottom: '1rem',
-        },
-        loading: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            height: '400px',
-        },
-        error: {
-            color: 'red',
-            textAlign: 'center',
-        },
+    const handleLogout = async () => {
+        try {
+            await signOut(auth);
+            navigate('/login'); 
+        } catch (error) {
+            console.error('Error logging out:', error);
+        }
     };
 
-    const themeColor = useSelector(state => state.theme.color);
-
-
     return (
-        <Box sx={{ backgroundColor: themeColor, p: 3 }}>
-
-        <Container style={styles.container }>
-            <h1 style={styles.title}>Dashboard</h1>
-           
-            <div style={styles.buttonGroup}>
-                <Button variant="contained" color="secondary" component={Link} to="/addproduct">
-                    Add Product
-                </Button>
-            </div>
-
-            {loading ? (
-                <div style={styles.loading}>
-                    <CircularProgress />
-                </div>
-            ) : error ? (
-                <Typography variant="body1" style={styles.error}>
-                    {error}
-                </Typography>
-            ) : (
-                <div style={styles.productGrid}>
-                    {products.map(item => (
-                        <div
-                            key={item.id}
-                            onClick={() => goToDetail(item)}
-                            style={styles.productCard}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.transform = styles.productCardHover.transform;
-                                e.currentTarget.style.boxShadow = styles.productCardHover.boxShadow;
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.transform = 'none';
-                                e.currentTarget.style.boxShadow = 'none';
-                            }}
-                        >
-                            <img src={item.imageUrl || item.image} alt={item.title} style={styles.productImage} />
-                            <h5 style={styles.productTitle}>{item.title}</h5>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </Container>
+        <Box sx={{ backgroundColor: themeColor, minHeight: '100vh', py: 5 }}>
+            <Container maxWidth="lg" sx={{ backgroundColor: '#f5f5f5', borderRadius: '16px', p: 4, boxShadow: 3 }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
+                    <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: '#333' }}>
+                        Dashboard
+                    </Typography>
+                    <Button variant="contained" color="primary" onClick={handleLogout}>
+                        Logout
+                    </Button>
+                </Box>
+                <Divider sx={{ mb: 4 }} />
+                <Box display="flex" justifyContent="center" mb={4}>
+                    <Button variant="contained" color="secondary" component={Link} to="/addproduct">
+                        Add Product
+                    </Button>
+                </Box>
+                {loading ? (
+                    <Box display="flex" justifyContent="center" alignItems="center" minHeight="300px">
+                        <CircularProgress />
+                    </Box>
+                ) : error ? (
+                    <Typography variant="body1" color="error" align="center">
+                        {error}
+                    </Typography>
+                ) : (
+                    <Grid container spacing={4}>
+                        {products.map((item) => (
+                            <Grid item key={item.id} xs={12} sm={6} md={4} lg={3}>
+                                <Card
+                                    sx={{
+                                        height: '100%',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        justifyContent: 'space-between',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        '&:hover': {
+                                            transform: 'scale(1.05)',
+                                            boxShadow: '0 12px 24px rgba(0,0,0,0.2)',
+                                        },
+                                        borderRadius: '16px',
+                                        overflow: 'hidden',
+                                    }}
+                                    onClick={() => goToDetail(item)}
+                                >
+                                    <CardActionArea>
+                                        <CardMedia
+                                            component="img"
+                                            height="180"
+                                            image={item.imageUrl || item.image}
+                                            alt={item.title}
+                                            sx={{ objectFit: 'cover' }}
+                                        />
+                                        <CardContent sx={{ textAlign: 'center' }}>
+                                            <Typography
+                                                variant="h6"
+                                                component="div"
+                                                sx={{
+                                                    fontWeight: 'bold',
+                                                    overflow: 'hidden',
+                                                    textOverflow: 'ellipsis',
+                                                    whiteSpace: 'nowrap',
+                                                }}
+                                            >
+                                                {item.title}
+                                            </Typography>
+                                            <Typography variant="body2" color="text.secondary" mt={1}>
+                                                {item.description ? item.description.substring(0, 60) + '...' : 'No description available.'}
+                                            </Typography>
+                                        </CardContent>
+                                    </CardActionArea>
+                                </Card>
+                            </Grid>
+                        ))}
+                    </Grid>
+                )}
+            </Container>
         </Box>
     );
 };

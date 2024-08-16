@@ -1,4 +1,3 @@
-// Import necessary hooks and components
 import React, { useState } from 'react';
 import { SignUpUser } from '../Confing/Firebase';
 import { useNavigate } from 'react-router-dom';
@@ -8,24 +7,27 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import Link from '@mui/material/Link';
-import { useSelector, useDispatch } from 'react-redux';
-
+import { useSelector } from 'react-redux';
+import InputAdornment from '@mui/material/InputAdornment';
+import IconButton from '@mui/material/IconButton';
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
-  const [age, setAge] = useState('');
+  const [age, setAge] = useState('');  // Added age state
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleSignUp = async () => {
     try {
-      const user = await SignUpUser({ email, password, fullName, age });
+      const user = await SignUpUser({ email, password, fullName, age });  // Include age in sign up data
       alert('User signed up successfully!');
       console.log(user);
-      navigate('/dashboard', { state: { email: user.email } }); // Pass email to the dashboard
+      navigate('/Login'); 
     } catch (e) {
       console.error('Error signing up:', e);
       alert(e.message);
@@ -33,11 +35,13 @@ export default function Signup() {
   };
 
   const themeColor = useSelector(state => state.theme.color);
- 
+
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (event) => event.preventDefault();
+
   return (
-      
-    <Container sx={{backgroundColor: themeColor}} maxWidth="xs">
-      <Box  mt={5} textAlign="center">
+    <Container sx={{ backgroundColor: themeColor, padding: 3, borderRadius: 3, boxShadow: 3 }} maxWidth="xs">
+      <Box mt={5} textAlign="center">
         <Typography variant="h4" component="h1" gutterBottom>
           Sign Up
         </Typography>
@@ -45,23 +49,29 @@ export default function Signup() {
           <Grid item xs={12}>
             <TextField
               id="fullName"
-              label="Full Name"
+              label="Name"
               type="text"
               fullWidth
               variant="outlined"
               value={fullName}
               onChange={e => setFullName(e.target.value)}
+              InputProps={{
+                sx: { borderRadius: '12px' }
+              }}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               id="age"
               label="Age"
-              type="number"
+              type="number"  // Added age input field
               fullWidth
               variant="outlined"
               value={age}
               onChange={e => setAge(e.target.value)}
+              InputProps={{
+                sx: { borderRadius: '12px' }
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -73,17 +83,35 @@ export default function Signup() {
               variant="outlined"
               value={email}
               onChange={e => setEmail(e.target.value)}
+              InputProps={{
+                sx: { borderRadius: '12px' }
+              }}
             />
           </Grid>
           <Grid item xs={12}>
             <TextField
               id="password"
               label="Password"
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               fullWidth
               variant="outlined"
               value={password}
               onChange={e => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                sx: { borderRadius: '12px' }
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -92,16 +120,18 @@ export default function Signup() {
               color="primary"
               fullWidth
               onClick={handleSignUp}
+              sx={{ padding: '10px 0', borderRadius: '12px', textTransform: 'none' }}
             >
               Sign Up
             </Button>
+          </Grid>
+          <Grid item xs={12} textAlign="center">
             <Link href="/login" variant="body2">
-             have an account? 
-          </Link>
+              Already have an account? Sign in
+            </Link>
           </Grid>
         </Grid>
       </Box>
     </Container>
-
   );
 }

@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 // Initial state with a default theme color
 const initialState = {
-  color: 'green', // Default theme color
+  color: 'white', // Default theme color
 };
 
 // Create a slice for theme management

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setTheme } from '../../Store/ThemeSlice';
-import { AppBar, Toolbar, IconButton, Badge, Box, Button } from '@mui/material';
+import { AppBar, Toolbar, IconButton, Badge, Box, Button, Typography } from '@mui/material';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import CartModal from './CartModal'; // Import the CartModal component
 
@@ -27,41 +27,77 @@ export default function Header() {
     <>
       <AppBar position="static" color="default" sx={{ mb: 4 }}>
         <Toolbar>
-          <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', gap: 1 }}>
-              <div
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: 'red',
-                  cursor: 'pointer',
-                }}
-                onClick={() => dispatch(setTheme('red'))}
-              ></div>
-              <div
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: 'blue',
-                  cursor: 'pointer',
-                }}
-                onClick={() => dispatch(setTheme('blue'))}
-              ></div>
-              <div
-                style={{
-                  width: '24px',
-                  height: '24px',
-                  borderRadius: '50%',
-                  backgroundColor: 'green',
-                  cursor: 'pointer',
-                }}
-                onClick={() => dispatch(setTheme('green'))}
-              ></div>
-            </Box>
+          {/* Logo */}
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+            <img src="/path-to-logo.png" alt="Logo" style={{ height: '40px', marginRight: '10px' }} />
+            YourBrand
+          </Typography>
+
+          {/* Navigation Links */}
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', flexGrow: 1 }}>
+            <Button   color="inherit" sx={{ textTransform: 'none' }}>
+              Home
+            </Button>
+            <Button   color="inherit" sx={{ textTransform: 'none' }}>
+              Products
+            </Button>
+            <Button  color="inherit" sx={{ textTransform: 'none' }}>
+              About
+            </Button>
+            <Button   color="inherit" sx={{ textTransform: 'none' }}>
+              Contact
+            </Button>
           </Box>
-          <IconButton color="inherit" sx={{ ml: 2 }} onClick={handleCartClick}>
+
+          {/* Theme Selectors */}
+          <Box sx={{ display: 'flex', alignItems: 'center', mr: 2 }}>
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'red',
+                cursor: 'pointer',
+              }}
+              onClick={() => dispatch(setTheme('red'))}
+            ></div>
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'blue',
+                cursor: 'pointer',
+                marginLeft: '8px',
+              }}
+              onClick={() => dispatch(setTheme('blue'))}
+            ></div>
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'green',
+                cursor: 'pointer',
+                marginLeft: '8px',
+              }}
+              onClick={() => dispatch(setTheme('green'))}
+            ></div>
+            <div
+              style={{
+                width: '24px',
+                height: '24px',
+                borderRadius: '50%',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                marginLeft: '8px',
+              }}
+              onClick={() => dispatch(setTheme('white'))}
+            ></div>
+          </Box>
+
+          {/* Shopping Cart */}
+          <IconButton color="inherit" onClick={handleCartClick}>
             <Badge badgeContent={totalItems} color="secondary">
               <ShoppingCartIcon />
             </Badge>

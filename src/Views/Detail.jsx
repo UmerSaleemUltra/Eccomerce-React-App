@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getSingleProduct } from '../Confing/Firebase';
 import { useSelector, useDispatch } from 'react-redux';
-import { addToCart, removeFromCart } from '../../Store/Cartslice'; // Import actions
+import { addToCart, removeFromCart } from '../../Store/Cartslice';
 import {
   Box,
   Button,
@@ -13,6 +13,8 @@ import {
   Grid,
   Container,
   Paper,
+  Chip,
+  Divider,
 } from '@mui/material';
 
 export default function Detail() {
@@ -46,99 +48,139 @@ export default function Detail() {
 
   return (
     <Container sx={{ mt: 5 }}>
-      <Paper elevation={4} sx={{ borderRadius: 2, overflow: 'hidden' }}>
+      <Paper elevation={6} sx={{ borderRadius: 6, overflow: 'hidden' }}>
         <Box
           sx={{
-            backgroundColor: themeColor,
-            borderRadius: 2,
-            p: 3,
-            boxShadow: 3,
+            background: `linear-gradient(135deg, ${themeColor} 30%, #ffffff 100%)`,
+            p: 4,
+            position: 'relative',
           }}
         >
           <Button
             onClick={onBack}
-            variant="outlined"
+            variant="contained"
             color="primary"
-            sx={{ mb: 3 }}
+            sx={{
+              mb: 3,
+              fontWeight: 'bold',
+              boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+              borderRadius: '20px',
+            }}
           >
             Back
           </Button>
-          <Grid container spacing={4} alignItems="center">
+          <Grid container spacing={4}>
             <Grid item xs={12} md={6}>
-              <Card sx={{ borderRadius: 2 }}>
+              <Card
+                sx={{
+                  boxShadow: 6,
+                  borderRadius: 4,
+                  overflow: 'hidden',
+                  transition: 'transform 0.3s, box-shadow 0.3s',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 12px 24px rgba(0,0,0,0.3)',
+                  },
+                }}
+              >
                 <CardMedia
                   component="img"
                   height="400"
                   image={product.imageUrl}
                   alt={product.title}
-                  sx={{
-                    borderRadius: 2,
-                    objectFit: 'cover',
-                    boxShadow: 2,
-                  }}
+                  sx={{ objectFit: 'cover' }}
                 />
               </Card>
             </Grid>
             <Grid item xs={12} md={6}>
-              <CardContent>
+              <CardContent sx={{ p: 0 }}>
                 <Typography
-                  variant="h4"
+                  variant="h3"
                   gutterBottom
-                  sx={{ color: 'text.primary' }}
+                  sx={{
+                    fontWeight: 'bold',
+                    color: 'text.primary',
+                    mb: 2,
+                    letterSpacing: '0.5px',
+                  }}
                 >
                   {product.title}
                 </Typography>
-                <Typography
-                  variant="h5"
-                  color="textSecondary"
-                  gutterBottom
-                  sx={{ fontWeight: 'bold' }}
-                >
-                  Rs. {product.price}
-                </Typography>
-                <Typography variant="body1" paragraph>
+                <Chip
+                  label={`Rs. ${product.price}`}
+                  color="secondary"
+                  sx={{
+                    fontSize: '1.2rem',
+                    fontWeight: 'bold',
+                    mb: 3,
+                    backgroundColor: '#1976d2',
+                    color: '#fff',
+                    px: 2,
+                  }}
+                />
+                <Typography variant="body1" paragraph sx={{ mb: 4, lineHeight: 1.7 }}>
                   {product.description}
                 </Typography>
 
-                {/* Display current quantity */}
                 {cartProduct && (
-                  <Typography variant="body1" sx={{ mb: 2 }}>
-                    Quantity in Cart: {cartProduct.quantity}
-                  </Typography>
+                  <Chip
+                    label={`In Cart: ${cartProduct.quantity}`}
+                    color="primary"
+                    sx={{
+                      mb: 3,
+                      fontWeight: 'bold',
+                      backgroundColor: '#43a047',
+                      color: '#fff',
+                      px: 2,
+                    }}
+                  />
                 )}
 
-                {/* Add to Cart Button */}
-                <Button
-                  onClick={() => dispatch(addToCart(product))}
-                  variant="contained"
-                  color="secondary"
-                  sx={{
-                    mt: 2,
-                    fontWeight: 'bold',
-                    paddingX: 3,
-                    paddingY: 1,
-                    mr: 1,
-                  }}
-                >
-                  Add to Cart
-                </Button>
+                <Divider sx={{ my: 3 }} />
 
-                {/* Remove from Cart Button */}
-                {cartProduct && (
+                <Box sx={{ display: 'flex', gap: 2 }}>
                   <Button
-                    onClick={() => dispatch(removeFromCart(product))}
-                    variant="outlined"
-                    color="error"
+                    onClick={() => dispatch(addToCart(product))}
+                    variant="contained"
                     sx={{
-                      mt: 2,
+                      backgroundColor: '#43a047',
+                      color: '#fff',
                       fontWeight: 'bold',
                       paddingX: 3,
                       paddingY: 1,
+                      borderRadius: '20px',
+                      flexGrow: 1,
+                      boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                      '&:hover': {
+                        backgroundColor: '#388e3c',
+                      },
                     }}
                   >
-                    Remove from Cart
+                    Add to Cart
                   </Button>
-                )}
+
+                  {cartProduct && (
+                    <Button
+                      onClick={() => dispatch(removeFromCart(product))}
+                      variant="outlined"
+                      sx={{
+                        borderColor: '#d32f2f',
+                        color: '#d32f2f',
+                        fontWeight: 'bold',
+                        paddingX: 3,
+                        paddingY: 1,
+                        borderRadius: '20px',
+                        flexGrow: 1,
+                        boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+                        '&:hover': {
+                          backgroundColor: '#ffebee',
+                        },
+                      }}
+                    >
+                      Remove from Cart
+                    </Button>
+                  )}
+                </Box>
               </CardContent>
             </Grid>
           </Grid>
