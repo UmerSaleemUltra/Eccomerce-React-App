@@ -1,103 +1,73 @@
-import React, { useEffect, useState } from 'react';
-import { createBrowserRouter, RouterProvider, useNavigate, Outlet, Route, } from 'react-router-dom';
-import Dashboard from '../Views/Dashboard';
-import Detail from '../Views/Detail';
-import Signup from '../Views/Signup';
-import Login from '../Views/Login';
-import AddProduct from '../Views/AddProduct';
-import Header from '../Views/Header';
-import { onAuthStateChanged, auth } from './Firebase'; // Ensure correct imports
+import { createBrowserRouter, Outlet, RouterProvider, useNavigate, } from "react-router-dom";
+import Dashboard from "../Views/Dashboard";
+import Signup from "../Views/Signup";
+import AddProduct from "../Views/AddProduct";
+import LoginUser from "../Views/Login";
+import Detail from "../Views/Detail";
+import Header from "../Views/Header";
+import { auth, onAuthStateChanged } from "./Firebase";
+import { useEffect, useState } from "react";
+import Login from "../Views/Login";
 
-// Main component with auth logic and routing
-function Main() {
-  const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    const { pathname } = window.location;
-
-    if (user) {
-      console.log('User logged in:', user);
-      if (pathname === '/login') {
-        navigate('/');
-      }
-    } else {
-      console.log('User logged out');
-      if (pathname === '/addproduct') {
-        navigate('/login');
-      }
-    }
-  }, [navigate, user]);
-
-  return (
-    <div>
-      <Outlet />
-    </div>
-  );
-}
-
-// PrivateRoute component for handling protected routes
-const PrivateRoute = ({ element }) => {
-  const [user, setUser] = useState(null);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
-    });
-
-    // Cleanup subscription on unmount
-    return () => unsubscribe();
-  }, []);
-
-  if (user === null) {
-    return null; // Optionally show a loading spinner or placeholder
-  }
-
-  return user ? element : <Navigate to="/login" />;
-};
-
-// Define your router configuration
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Main />,
-    children: [
-      {
+    {
         path: "/",
-        element: <PrivateRoute element={<Dashboard />} />,
-      },
-      {
-        path: "/detail/:id",
-        element: <PrivateRoute element={<Detail />} />,
-      },
-      {
-        path: "/signup",
-        element: <Signup />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "/addproduct",
-        element: <PrivateRoute element={<AddProduct />} />,
-      },
-    ],
-  },
+        element: <Main />,
+        children: [{
+            path: "/",
+            element: <div><Dashboard /></div>,
+        },
+        {
+            path: "/signup",
+            element: <div><Signup /></div>,
+        },
+        {
+            path: "/addproduct",
+            element: <div><AddProduct /></div>,
+        },
+        {
+            path: "/Login",
+            element: <div><Login /></div>,
+        },
+        // {
+        //     path: "/notfound",
+        //     element: <div><NotFound /></div>,
+        // },
+        {
+            path: "/detail/:adId",
+            element: <div>{<Detail />}</div>,
+        }]
+    },
 ]);
 
-function Router() {
-  return <RouterProvider router={router} />;
+function Main() {
+    const [user, setUser] = useState()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        onAuthStateChanged(auth, (user) => {
+            setUser(user)
+        });
+    }, [])
+    useEffect(() => {
+        const {pathname} = window.location
+        if (user) {
+            console.log('user logged in', user)
+        }
+        else {
+            console.log('please logged in !')
+            if (pathname === '/addproduct') {
+                navigate('/signin')
+            }
+        }
+    }, [window.location.pathname, user])
+    return <div>
+        <Outlet />
+    </div>
+
 }
 
-export default Router;
+function Routers() {
+    return <RouterProvider router={router} />
+}
+export default Routers;

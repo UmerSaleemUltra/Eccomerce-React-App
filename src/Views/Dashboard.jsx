@@ -19,6 +19,7 @@ const Dashboard = () => {
     const [error, setError] = useState(null);
     const [user, setUser] = useState(null); 
     const themeColor = useSelector(state => state.theme.color);
+    
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -69,13 +70,17 @@ const Dashboard = () => {
                     <Typography variant="h4" component="h1" sx={{ fontWeight: 'bold', color: '#333' }}>
                         Dashboard
                     </Typography>
+
+                    <h5 className='text-center text-black'>Welcome {user?.email}</h5>
+
+
                     <Button variant="contained" color="primary" onClick={handleLogout}>
                         Logout
                     </Button>
                 </Box>
                 <Divider sx={{ mb: 4 }} />
                 <Box display="flex" justifyContent="center" mb={4}>
-                    <Button variant="contained" color="secondary" component={Link} to="/addproduct">
+                    <Button variant="contained" color="secondary" component={Link} to="/AddProduct">
                         Add Product
                     </Button>
                 </Box>
