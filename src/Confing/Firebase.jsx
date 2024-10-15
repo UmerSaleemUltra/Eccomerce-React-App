@@ -22,13 +22,13 @@ import {
 
 // Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDkwWFCHHLNTKXY-10EiLh8WTpwtDCA3lo",
-  authDomain: "expertizo-authentication.firebaseapp.com",
-  projectId: "expertizo-authentication",
-  storageBucket: "expertizo-authentication.appspot.com",
-  messagingSenderId: "71504779524",
-  appId: "1:71504779524:web:ebec9367dd3d28849a5851",
-  measurementId: "G-GPDTKE59BR",
+  apiKey: "AIzaSyBse6IE_GT7IvcWZ3o0gutot8QyVOwIKSQ",
+  authDomain: "expense-tracker-bcef1.firebaseapp.com",
+  projectId: "expense-tracker-bcef1",
+  storageBucket: "expense-tracker-bcef1.appspot.com",
+  messagingSenderId: "238224847833",
+  appId: "1:238224847833:web:8abc317e8d5257903edfc8",
+  measurementId: "G-9BWJL8XL13"
 };
 
 // Initialize Firebase
